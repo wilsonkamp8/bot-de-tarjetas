@@ -1,9 +1,6 @@
+import os
 import random
-import datetime
 from telegram.ext import Updater, CommandHandler
-
-# 🚨 Reemplaza este token con el tuyo (entre comillas)
-TOKEN = '7861245578:AAEaaZ5Gq_Hs0g20gmN0z7OftKu0LN-1qTQ'  # Ejemplo: '123456789:ABCdefGHIJKlmnoPQRS-TOKENREAL123'
 
 def luhn_checksum(card_number):
     def digits_of(n):
@@ -54,6 +51,10 @@ def generar(update, context):
         update.message.reply_text(f"⚠️ Error: {e}")
 
 def main():
+    TOKEN = os.getenv("TELEGRAM_TOKEN")  # ✅ Se toma desde Render env vars
+    if not TOKEN:
+        print("⚠️ TOKEN no encontrado en variables de entorno.")
+        return
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("gen", generar))
@@ -63,4 +64,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
