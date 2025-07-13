@@ -1,6 +1,9 @@
-import os
 import random
+import datetime
 from telegram.ext import Updater, CommandHandler
+
+# 🚨 Reemplaza este token con el tuyo (entre comillas)
+TOKEN = '7861245578:AAEaaZ5Gq_Hs0g20gmN0z7OftKu0LN-1qTQ'
 
 def luhn_checksum(card_number):
     def digits_of(n):
@@ -18,7 +21,7 @@ def generar_tarjetas(bin_str, mes, anio):
     longitud_total = 16
     if len(bin_str) >= longitud_total:
         return ["❌ El BIN debe tener menos de 16 dígitos."]
-    while len(tarjetas) < 10:  # Cambia 10 por 50 si quieres más
+    while len(tarjetas) < 10:
         faltan = longitud_total - len(bin_str) - 1
         base = bin_str + ''.join(str(random.randint(0, 9)) for _ in range(faltan))
         for i in range(10):
@@ -51,10 +54,6 @@ def generar(update, context):
         update.message.reply_text(f"⚠️ Error: {e}")
 
 def main():
-    TOKEN = os.getenv("TELEGRAM_TOKEN")  # ✅ Se toma desde Render env vars
-    if not TOKEN:
-        print("⚠️ TOKEN no encontrado en variables de entorno.")
-        return
     updater = Updater(TOKEN, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler("gen", generar))
@@ -64,3 +63,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
